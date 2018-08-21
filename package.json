@@ -7,9 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npx jest",
-    "spec-test": "npx jest .spec.test.ts",
-    "integration-test": "npx jest .integration.test.ts"
+    "test": "npm run spec-test && npm run integration-test",
+    "spec-test": "npx jest .spec.test.ts --silent",
+    "integration-test": "npx jest --silent .integration.test.ts -i"
   },
   "repository": {
     "type": "git",
@@ -27,19 +27,38 @@
     "url": "https://github.com/fozzleberry/crumple/issues"
   },
   "homepage": "https://github.com/fozzleberry/crumple#readme",
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "useBabelrc": true
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/*.test.(ts|js)"
+    ],
+    "testEnvironment": "node"
+  },
   "devDependencies": {
     "@types/faker": "^4.1.2",
     "@types/jest": "^22.1.3",
     "@types/mongodb": "^3.0.5",
     "@types/mongoose": "^4.7.34",
+    "babel": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
     "faker": "^4.1.0",
     "jest": "^23.5.0",
     "mockgoose-fix": "^7.3.6",
-    "promise": "^8.0.1",
     "ts-jest": "^22.0.4",
     "ts-node": "^5.0.0",
     "tslint": "^5.9.1",
-    "typescript": "^2.7.2"
+    "typescript": "^2.9.2"
   },
   "dependencies": {
     "mongoose": "^5.2.9"

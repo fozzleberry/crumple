@@ -1,34 +1,23 @@
-import { startUpDb, emptyDb, addTestDoc, closeDb } from "../test/integrationTestHelpers";
+import { integrationTestHelpers } from "../test/integrationTestHelpers";
 import { testModel} from "../test/testModel";
 import { RepositoryBase } from "./repositoryBase";
 import { fakeDoc } from "../test/fakeOptions";
 
-global.Promise = require.requireActual('promise');
-
-beforeAll(async (done) => {
-    jest.setTimeout(120000);
-    await startUpDb();
-    done();
+beforeAll(async () => {
+    await integrationTestHelpers.setup();
 });
 
-beforeEach(async (done) => {
-    await emptyDb();
-    done();
+beforeEach(async () => {
+    await integrationTestHelpers.reset();
 });
 
-afterEach(async (done) => {
-    await closeDb();
-    done();
-});
-
-afterAll(async (done) => {
-    await closeDb();
-    done();
+afterAll(async () => {
+    await integrationTestHelpers.teardown();
 });
 
 describe("repositoryBase", () => {
 
-    it("should add a new document to the db", async (done) => {
+    it("should add a new document to the db", async () => {
     const testDoc = fakeDoc;
 
     const rb = new RepositoryBase(testModel);
@@ -38,34 +27,30 @@ describe("repositoryBase", () => {
 
     expect(createdDoc).toHaveProperty('_id');
     expect(findByIdResult._id).toEqual(createdDoc._id);
-    done();
 
   });
 
-    it('should get all the documents in the db', async (done) => {
-      const testDocs = [await addTestDoc(testModel), await addTestDoc(testModel), await addTestDoc(testModel)];
-
+    it('should get all the documents in the db', async () => {
+      const testDocs = [await integrationTestHelpers.addTestDoc(testModel), await integrationTestHelpers.addTestDoc(testModel), await integrationTestHelpers.addTestDoc(testModel)];
 
       const rb = new RepositoryBase(testModel);
 
       const allDocs = await rb.getAll();
 
       expect(allDocs[2]._id).toEqual(testDocs[2]._id);
-        done();
     });
 
-    it('should get a doc by id' ,async (done) => {
-      const testDoc = await addTestDoc(testModel);
+    it('should get a doc by id' ,async () => {
+      const testDoc = await integrationTestHelpers.addTestDoc(testModel);
       const rb = new RepositoryBase(testModel);
 
       const result = await rb.getById(testDoc._id);
 
       expect(result._id).toEqual(testDoc._id);
-      done();
     });
 
-    it('should update a doc by id', async (done) => {
-        const testDoc = await addTestDoc(testModel);
+    it('should update a doc by id', async () => {
+        const testDoc = await integrationTestHelpers.addTestDoc(testModel);
         const update = { firstName: 'keith' };
         const rb = new RepositoryBase(testModel);
 
@@ -76,11 +61,10 @@ describe("repositoryBase", () => {
 
         expect(findByIdResult._id).toEqual(testDoc._id);
         expect(findByIdResult.firstName).toEqual(update.firstName);
-        done();
     });
 
-    it('should delete a doc by id', async (done) => {
-        const testDocs = [await addTestDoc(testModel), await addTestDoc(testModel)];
+    it('should delete a doc by id', async () => {
+        const testDocs = [await integrationTestHelpers.addTestDoc(testModel), await integrationTestHelpers.addTestDoc(testModel)];
         const rb = new RepositoryBase(testModel);
 
         await rb.deleteById(testDocs[0]._id);
@@ -89,6 +73,5 @@ describe("repositoryBase", () => {
 
         expect(allDocs.length).toBe(1);
         expect(allDocs[0]._id).toEqual(testDocs[1]._id);
-        done();
     });
 });

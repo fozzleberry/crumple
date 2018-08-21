@@ -1,4 +1,4 @@
-import {startUpDb, emptyDb, addTestDoc, closeDb} from "../test/integrationTestHelpers";
+import { integrationTestHelpers } from "../test/integrationTestHelpers";
 import { testModel } from "../test/testModel";
 import { ControllerBase } from "./controllerBase";
 import * as fakeHelpers from "../test/fakeOptions";
@@ -12,27 +12,27 @@ describe("controllerBase", () => {
   let cb: ControllerBase;
   let rf: ResponseFactory;
 
-  beforeAll(async (done) => {
+  beforeAll(async () => {
     service = new ServiceBase(new RepositoryBase(testModel));
     rf = new ResponseFactory();
-      return await startUpDb();
+      await integrationTestHelpers.setup();
   });
 
-  beforeEach(async (done) => {
+  beforeEach(async () => {
     cb = new ControllerBase(service);
-      return await emptyDb();
+      return await integrationTestHelpers.reset();
   });
 
-  afterEach(async (done) => {
+  afterEach(async () => {
     fakeHelpers.fakeRes.json.mockReset();
   });
 
-  afterAll(async (done) => {
-    return await closeDb();
+  afterAll(async () => {
+    return await integrationTestHelpers.teardown();
   });
 
   describe("create", () => {
-    it("should add a valid document to the db and create a success response", async (done) => {
+    it("should add a valid document to the db and create a success response", async () => {
       const testDoc = fakeHelpers.fakeDoc;
       await cb.create(fakeHelpers.fakeRes, testDoc);
 
@@ -44,10 +44,9 @@ describe("controllerBase", () => {
           statusCode: 201
         })
       );
-      done();
     });
 
-    it("should fail validation and create a fail response", async (done) => {
+    it("should fail validation and create a fail response", async () => {
       const testDoc = fakeHelpers.fakeInvalidDoc;
       await cb.create(fakeHelpers.fakeRes, testDoc);
 
@@ -59,7 +58,6 @@ describe("controllerBase", () => {
           statusCode: 422
         })
       );
-      done();
     });
 
     // it.skip("should encounter an error and create an error response", async () => {
@@ -82,11 +80,11 @@ describe("controllerBase", () => {
   });
 
   describe("getAll", () => {
-    it("should get all documents from the db and create a success response", async (done) => {
+    it("should get all documents from the db and create a success response", async () => {
       const testDocs = [
-        await addTestDoc(testModel),
-        await addTestDoc(testModel),
-        await addTestDoc(testModel)
+        await integrationTestHelpers.addTestDoc(testModel),
+        await integrationTestHelpers.addTestDoc(testModel),
+        await integrationTestHelpers.addTestDoc(testModel)
       ];
       const testAssertion = [
         expect.objectContaining(testDocs[0]._doc),
@@ -103,10 +101,10 @@ describe("controllerBase", () => {
           statusCode: 200
         })
       );
-      done();
+
     });
 
-    it("should create a success response with an empty array when no docs are found", async (done) => {
+    it("should create a success response with an empty array when no docs are found", async () => {
       await cb.getAll(fakeHelpers.fakeRes);
       expect(fakeHelpers.fakeRes.json).toHaveBeenCalledTimes(1);
       expect(fakeHelpers.fakeRes.json).toHaveBeenCalledWith(
@@ -116,13 +114,12 @@ describe("controllerBase", () => {
           statusCode: 200
         })
       );
-      done();
     });
   });
 
   describe("getById", () => {
-    it("should retrieve a document by id and create a response ", async (done) => {
-      const testDoc = await addTestDoc(testModel);
+    it("should retrieve a document by id and create a response ", async () => {
+      const testDoc = await integrationTestHelpers.addTestDoc(testModel);
 
       await cb.getById(fakeHelpers.fakeRes, testDoc._id);
       expect(fakeHelpers.fakeRes.json).toHaveBeenCalledTimes(1);
@@ -133,10 +130,9 @@ describe("controllerBase", () => {
           statusCode: 200
         })
       );
-      done();
     });
 
-    it("should create a not found response when no docs match the Id", async (done) => {
+    it("should create a not found response when no docs match the Id", async () => {
       await cb.getById(fakeHelpers.fakeRes, new ObjectID());
       expect(fakeHelpers.fakeRes.json).toHaveBeenCalledTimes(1);
       expect(fakeHelpers.fakeRes.json).toHaveBeenCalledWith(
@@ -146,13 +142,12 @@ describe("controllerBase", () => {
           message: expect.any(String)
         })
       );
-      done();
     });
   });
 
   describe("updateById", () => {
-    it("should update a document by its id an create a new response with the updated data", async (done) => {
-      const testDoc = await addTestDoc(testModel);
+    it("should update a document by its id an create a new response with the updated data", async () => {
+      const testDoc = await integrationTestHelpers.addTestDoc(testModel);
       const update = fakeHelpers.fakeUpdateValue;
 
       await cb.updateById(fakeHelpers.fakeRes, testDoc._id, update);
@@ -170,10 +165,9 @@ describe("controllerBase", () => {
 
       expect(updatedDoc).toHaveProperty("firstName", update.firstName);
       expect(updatedDoc).toHaveProperty("lastName", testDoc._doc.lastName);
-      done();
     });
 
-    it("should create a not found response when no docs match the Id", async (done) => {
+    it("should create a not found response when no docs match the Id", async () => {
       const update = fakeHelpers.fakeUpdateValue;
 
       await cb.updateById(fakeHelpers.fakeRes, new ObjectID(), update);
@@ -185,15 +179,14 @@ describe("controllerBase", () => {
           message: expect.any(String)
         })
       );
-      done();
     });
   });
 
   describe("deleteById", () => {
-    it("should delete a document by id and create a success response", async (done) => {
+    it("should delete a document by id and create a success response", async () => {
       const testDocs = [
-        await addTestDoc(testModel),
-        await addTestDoc(testModel)
+        await integrationTestHelpers.addTestDoc(testModel),
+        await integrationTestHelpers.addTestDoc(testModel)
       ];
 
       await cb.deleteById(fakeHelpers.fakeRes, testDocs[0]._id);
@@ -211,10 +204,9 @@ describe("controllerBase", () => {
 
       expect(allDocs).toHaveLength(1);
       expect(allDocs[0]._id).toEqual(testDocs[1]._id);
-      done();
     });
 
-    it("should create a not found response when no docs match the Id", async (done) => {
+    it("should create a not found response when no docs match the Id", async () => {
       await cb.deleteById(fakeHelpers.fakeRes, new ObjectID());
       expect(fakeHelpers.fakeRes.json).toHaveBeenCalledTimes(1);
       expect(fakeHelpers.fakeRes.json).toHaveBeenCalledWith(
@@ -224,7 +216,6 @@ describe("controllerBase", () => {
           message: expect.any(String)
         })
       );
-      done();
     });
   });
 });
