@@ -9,7 +9,8 @@
   "scripts": {
     "test": "npm run spec-test && npm run integration-test",
     "spec-test": "npx jest .spec.test.ts --silent",
-    "integration-test": "npx jest --silent .integration.test.ts -i"
+    "integration-test": "npx jest --silent .integration.test.ts -i",
+    "test-coverage": "npx jest --coverage"
   },
   "repository": {
     "type": "git",
