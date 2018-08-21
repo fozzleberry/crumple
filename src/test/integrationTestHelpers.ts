@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Mockgoose } from "mockgoose-fix";
+import { Mockgoose } from "mockgoose";
 import {fakeDoc} from "./fakeOptions";
 
 const mockgoose: Mockgoose = new Mockgoose(mongoose);
