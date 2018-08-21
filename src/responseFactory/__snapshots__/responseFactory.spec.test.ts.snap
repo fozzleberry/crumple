@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResponseFactory should return a bad request response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "message": "bad request",
+  "status": "error",
+  "statusCode": 400,
+}
+`;
+
+exports[`ResponseFactory should return a conflict response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "message": "resource already exists ( duplicate key )",
+  "status": "error",
+  "statusCode": 409,
+}
+`;
+
+exports[`ResponseFactory should return a created response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "link": "someLink",
+  "status": "success",
+  "statusCode": 201,
+}
+`;
+
+exports[`ResponseFactory should return a formatted response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "status": "success",
+  "statusCode": 200,
+}
+`;
+
+exports[`ResponseFactory should return a not found response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "message": "not found",
+  "status": "error",
+  "statusCode": 404,
+}
+`;
+
+exports[`ResponseFactory should return an error response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "message": "some message",
+  "status": "error",
+  "statusCode": 413,
+}
+`;
+
+exports[`ResponseFactory should return an invalid response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "message": "validation error",
+  "status": "fail",
+  "statusCode": 422,
+}
+`;
+
+exports[`ResponseFactory should return an ok response 1`] = `
+Object {
+  "data": Object {
+    "some": "data",
+  },
+  "link": "someLink",
+  "status": "success",
+  "statusCode": 200,
+}
+`;
