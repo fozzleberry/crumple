@@ -1,6 +1,6 @@
 {
   "name": "crumple",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1",
   "description": "simple extendable typescript base classes for CRUD operations in nodeJS",
   "main": "index.js",
   "directories": {
@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "npx jest",
-    "spec-test": "npx jest /src/**/*.spec.test.ts"
+    "spec-test": "npx jest .spec.test.ts",
+    "integration-test": "npx jest .integration.test.ts"
   },
   "repository": {
     "type": "git",
