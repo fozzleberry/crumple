@@ -1,6 +1,8 @@
 import faker from "faker";
 import { Types } from "mongoose";
 
+// @todo - refactor this shambles
+
 export const fakeId = Types.ObjectId();
 export const fakeProjection = "name address";
 export const fakeOptions = { skip: 1 };

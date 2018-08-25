@@ -4,31 +4,6 @@ import {fakeDoc} from "./fakeOptions";
 
 const mockgoose: Mockgoose = new Mockgoose(mongoose);
 
-
-// export async function startUpDb() {
-// //     return await  mockgoose
-// //         .prepareStorage()
-// //         .then(async () =>  {
-// //             await mongoose.connect("mongodb://localhost/test" );
-// //         });
-// // }
-// //
-// // export function emptyDb() {
-// //     return mockgoose.helper.reset();
-// // }
-// //
-// // export function addTestDoc(model: any) {
-// //     const createdDoc = model.create(fakeDoc);
-// //
-// //     return createdDoc;
-// // }
-// //
-// // export async function closeDb() {
-// //     await mockgoose.connection.close();
-// //     await mockgoose.disconnect();
-// //     return;
-// // }
-
 export const integrationTestHelpers = {
     setup: async function setup() {
         await mockgoose.prepareStorage();
